@@ -28,8 +28,8 @@ param(
 
 Import-Module PSSQLite
 
-$dbPath          = Join-Path $PSScriptRoot ".." $Config.database.path
-$templateFolder  = Join-Path $PSScriptRoot "..\templates"
+$dbPath          = Join-Path $PSScriptRoot ".." ".." $Config.database.path
+$templateFolder  = Join-Path $PSScriptRoot "..\..\templates"
 $batchSize       = $Config.email.batchSize
 $delaySeconds    = $Config.email.delaySeconds
 

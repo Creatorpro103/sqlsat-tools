@@ -69,7 +69,7 @@ if (-not $EmailOnly -and -not $GenerateOnly) {
     if (Confirm-Step "Step 1/3: Import attendees from EventBrite into SQLite") {
         Write-Host "`n[1/3] Importing attendees from EventBrite..." -ForegroundColor Green
         if (-not $WhatIfPreference) {
-            & "$PSScriptRoot\scripts\Import-Attendees.ps1" -Config $config
+            & "$PSScriptRoot\scripts\data\Import-Attendees.ps1" -Config $config
         } else {
             Write-Host "  WHATIF: Would fetch attendees from EventBrite event $($config.eventbrite.eventId) and upsert to database."
         }
@@ -83,7 +83,7 @@ if (-not $ImportOnly -and -not $EmailOnly) {
     if (Confirm-Step "Step 2/3: Generate SpeedPass PDFs for new attendees") {
         Write-Host "`n[2/3] Generating SpeedPasses..." -ForegroundColor Green
         if (-not $WhatIfPreference) {
-            & "$PSScriptRoot\scripts\Generate-SpeedPasses.ps1" -Config $config
+            & "$PSScriptRoot\scripts\speedpass\Generate-SpeedPasses.ps1" -Config $config
         } else {
             Write-Host "  WHATIF: Would generate SpeedPass PDFs for attendees without one."
         }
@@ -97,7 +97,7 @@ if (-not $ImportOnly -and -not $GenerateOnly) {
     if (Confirm-Step "Step 3/3: Email SpeedPasses to attendees who haven't received one") {
         Write-Host "`n[3/3] Sending emails..." -ForegroundColor Green
         if ($PSCmdlet.ShouldProcess("attendees with unsent SpeedPasses", "Send emails")) {
-            & "$PSScriptRoot\scripts\Send-SpeedPasses.ps1" -Config $config
+            & "$PSScriptRoot\scripts\speedpass\Send-SpeedPasses.ps1" -Config $config
         }
     } else {
         Write-Host "  Skipped email." -ForegroundColor DarkGray

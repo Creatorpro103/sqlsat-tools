@@ -12,7 +12,7 @@ param(
     [PSCustomObject]$Config
 )
 
-$dbPath = Join-Path $PSScriptRoot ".." $Config.database.path
+$dbPath = Join-Path $PSScriptRoot ".." ".." $Config.database.path
 
 if (-not (Get-Module -ListAvailable -Name PSSQLite)) {
     Write-Host "Installing PSSQLite module..." -ForegroundColor Cyan

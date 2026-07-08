@@ -15,7 +15,7 @@ param(
 
 Import-Module PSSQLite
 
-$dbPath = Join-Path $PSScriptRoot ".." $Config.database.path
+$dbPath = Join-Path $PSScriptRoot ".." ".." $Config.database.path
 
 # Load EventBrite token from SecretManagement
 try {

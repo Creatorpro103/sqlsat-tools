@@ -28,14 +28,14 @@ param(
 
 Import-Module PSSQLite
 
-$dbPath    = Join-Path $PSScriptRoot ".." $Config.database.path
+$dbPath    = Join-Path $PSScriptRoot ".." ".." $Config.database.path
 $outputFile = if ($Config.PSObject.Properties['badge'] -and $Config.badge.outputFile) {
-    Join-Path $PSScriptRoot ".." $Config.badge.outputFile
+    Join-Path $PSScriptRoot ".." ".." $Config.badge.outputFile
 } else {
-    Join-Path $PSScriptRoot "..\output\badges.pdf"
+    Join-Path $PSScriptRoot "..\..\output\badges.pdf"
 }
 $outputDir = Split-Path $outputFile -Parent
-$libPath   = Join-Path $PSScriptRoot "..\lib\QRCoder.dll"
+$libPath   = Join-Path $PSScriptRoot "..\..\lib\QRCoder.dll"
 
 if (-not (Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir | Out-Null }
 
@@ -44,9 +44,9 @@ if (-not (Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir
 $bgImagePath = if ($BackgroundImage) {
     $BackgroundImage
 } elseif ($Config.PSObject.Properties['badge'] -and $Config.badge.backgroundImage) {
-    Join-Path $PSScriptRoot ".." $Config.badge.backgroundImage
+    Join-Path $PSScriptRoot ".." ".." $Config.badge.backgroundImage
 } else {
-    Join-Path $PSScriptRoot "..\assets\badge-background.png"
+    Join-Path $PSScriptRoot "..\..\assets\badge-background.png"
 }
 
 if (-not (Test-Path $bgImagePath)) {
@@ -87,9 +87,12 @@ body { background: white; }
     display: grid;
     grid-template-columns: 4in 4in;
     grid-template-rows: 3in 3in 3in;
-    column-gap: 0.2in;
-    row-gap: 0.25in;
-    padding: 0.75in 0.15in;
+    column-gap: 0;
+    row-gap: 0;
+    /* Base offsets extracted from Avery's official 5392 .doc template
+       (top 1.431in, left 0.337in, right 0.163in, bottom 0.569in), shifted
+       up 0.5in - 1/16in to correct for this printer's actual feed alignment. */
+    padding: 0.9935in 0.163in 0.569in 0.337in;
     break-after: page;
 }
 .sheet:last-child { break-after: avoid; }

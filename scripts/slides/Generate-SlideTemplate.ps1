@@ -31,12 +31,12 @@ if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
 }
 Import-Module powershell-yaml
 
-. "$PSScriptRoot\Resolve-EventConfig.ps1"
+. "$PSScriptRoot\..\Resolve-EventConfig.ps1"
 $Config = Resolve-EventConfig -Config $Config
-. "$PSScriptRoot\Get-EventLogo.ps1"
+. "$PSScriptRoot\..\Get-EventLogo.ps1"
 
 $slideCfg      = $Config.slideTemplate
-$outputFile    = Join-Path $PSScriptRoot ".." $slideCfg.outputFile
+$outputFile    = Join-Path $PSScriptRoot ".." ".." $slideCfg.outputFile
 $footerText    = if ($slideCfg.PSObject.Properties['footerText']) { $slideCfg.footerText } else { "NO FOOD OR DRINKS IN THE CLASSROOMS" }
 $primaryColor  = if ($slideCfg.PSObject.Properties['primaryColor']) { $slideCfg.primaryColor } else { "013169" }
 $secondaryColor = if ($slideCfg.PSObject.Properties['secondaryColor']) { $slideCfg.secondaryColor } else { "F7C15D" }
@@ -130,7 +130,7 @@ if (-not $pythonOk) {
 
 # ── Build manifest and hand off to Python ───────────────────────────────────
 
-$brugLogoPath = Join-Path $PSScriptRoot ".." "assets" "brug-logo.png"
+$brugLogoPath = Join-Path $PSScriptRoot ".." ".." "assets" "brug-logo.png"
 
 $manifest = @{
     eventName       = $Config.event.name

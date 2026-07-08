@@ -23,11 +23,11 @@ if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
 }
 Import-Module powershell-yaml
 
-. "$PSScriptRoot\Resolve-EventConfig.ps1"
+. "$PSScriptRoot\..\Resolve-EventConfig.ps1"
 $Config = Resolve-EventConfig -Config $Config
 
 $cols       = if ($GridColumns -gt 0) { $GridColumns } else { $Config.stampGame.gridColumns }
-$outputFile = Join-Path $PSScriptRoot ".." $Config.stampGame.outputFile
+$outputFile = Join-Path $PSScriptRoot ".." ".." $Config.stampGame.outputFile
 $outputDir  = Split-Path $outputFile
 if (-not (Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir | Out-Null }
 
@@ -76,7 +76,7 @@ foreach ($group in $data.groups) {
 
 # ── Resolve free-space logo ───────────────────────────────────────────────────
 
-. "$PSScriptRoot\Get-EventLogo.ps1"
+. "$PSScriptRoot\..\Get-EventLogo.ps1"
 $eventLogo = Get-EventLogo -Config $Config -Override $Config.stampGame.freeSpaceLogoFile
 
 # ── Build HTML ────────────────────────────────────────────────────────────────

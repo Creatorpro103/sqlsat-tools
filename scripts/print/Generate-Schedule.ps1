@@ -24,11 +24,11 @@ param(
     [PSCustomObject]$Config
 )
 
-. "$PSScriptRoot\Resolve-EventConfig.ps1"
+. "$PSScriptRoot\..\Resolve-EventConfig.ps1"
 $Config = Resolve-EventConfig -Config $Config
 
 $sessionizeId = $Config.sessionize.eventId
-$outputFile   = Join-Path $PSScriptRoot ".." $Config.schedule.outputFile
+$outputFile   = Join-Path $PSScriptRoot ".." ".." $Config.schedule.outputFile
 $outputDir    = Split-Path $outputFile
 if (-not (Test-Path $outputDir)) { New-Item -ItemType Directory -Path $outputDir | Out-Null }
 
@@ -145,7 +145,7 @@ $dateStr   = $mainDay.ToString("MMMM d, yyyy")
 $genStr    = (Get-Date).ToString("MMMM d, yyyy")
 $appUrl    = $Config.schedule.appUrl
 
-. "$PSScriptRoot\Get-EventLogo.ps1"
+. "$PSScriptRoot\..\Get-EventLogo.ps1"
 $eventLogo = Get-EventLogo -Config $Config -Override $Config.schedule.logoFile
 
 Add-Type -AssemblyName System.Web

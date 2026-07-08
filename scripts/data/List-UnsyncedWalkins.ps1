@@ -19,7 +19,7 @@ param(
 
 Import-Module PSSQLite
 
-$dbPath = Join-Path $PSScriptRoot ".." $Config.database.path
+$dbPath = Join-Path $PSScriptRoot ".." ".." $Config.database.path
 
 $walkins = Invoke-SqliteQuery -DataSource $dbPath -Query @"
 SELECT a.Barcode, a.FirstName, a.LastName, a.Email, a.Company, a.JobTitle, a.OrderDate, p.PrintedAt

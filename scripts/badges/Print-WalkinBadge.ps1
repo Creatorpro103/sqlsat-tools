@@ -42,9 +42,9 @@ param(
 
 Import-Module PSSQLite
 
-$dbPath      = Join-Path $PSScriptRoot ".." $Config.database.path
-$libPath     = Join-Path $PSScriptRoot "..\lib\QRCoder.dll"
-$outputDir   = Join-Path $PSScriptRoot "..\output"
+$dbPath      = Join-Path $PSScriptRoot ".." ".." $Config.database.path
+$libPath     = Join-Path $PSScriptRoot "..\..\lib\QRCoder.dll"
+$outputDir   = Join-Path $PSScriptRoot "..\..\output"
 $printerName = if ($Printer) {
     $Printer
 } elseif ($Config.PSObject.Properties['badge'] -and $Config.badge.walkinPrinter) {
@@ -189,7 +189,7 @@ VALUES
 
     Write-Host "  Added locally only — Eventbrite has no API to create a real registration." -ForegroundColor Yellow
     Write-Host "  Add a free/comp order in Eventbrite (dashboard or Box Office app) when you get a chance," -ForegroundColor Yellow
-    Write-Host "  or run .\scripts\List-UnsyncedWalkins.ps1 later to see everyone still pending." -ForegroundColor Yellow
+    Write-Host "  or run .\scripts\data\List-UnsyncedWalkins.ps1 later to see everyone still pending." -ForegroundColor Yellow
 
     return [PSCustomObject]@{
         Barcode   = $barcode

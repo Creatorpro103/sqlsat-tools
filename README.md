@@ -9,7 +9,7 @@ the sponsor stamp game card — all driven by a single config file.
 ```
 1. Copy event.config.template.json → event.config.json
 2. Fill in your credentials and event IDs (see Config reference below)
-3. Run: .\scripts\Initialize-Database.ps1 -Config (Get-Content event.config.json | ConvertFrom-Json)
+3. Run: .\scripts\data\Initialize-Database.ps1 -Config (Get-Content event.config.json | ConvertFrom-Json)
 4. Run: .\Update-Event.ps1
 ```
 
@@ -110,17 +110,17 @@ Set-Secret -Name "SQLSaturday-Gmail" -Secret (Get-Credential)
 $config = Get-Content .\event.config.json | ConvertFrom-Json
 
 # Regenerate SpeedPass for one attendee
-.\scripts\Generate-SpeedPasses.ps1 -Config $config -Email "jane.doe@example.com" -Force
+.\scripts\speedpass\Generate-SpeedPasses.ps1 -Config $config -Email "jane.doe@example.com" -Force
 
 # Stamp game card (run once when sponsors are finalized)
-.\scripts\Generate-StampGame.ps1 -Config $config
+.\scripts\print\Generate-StampGame.ps1 -Config $config
 
 # Paper schedule (run once sessions are published on Sessionize)
-.\scripts\Generate-Schedule.ps1 -Config $config
+.\scripts\print\Generate-Schedule.ps1 -Config $config
 
 # Presenter slide-deck template — title, sponsor thank-you, and eval slides
 # (run once sponsors are finalized; re-run any time the sponsor roster changes)
-.\scripts\Generate-SlideTemplate.ps1 -Config $config
+.\scripts\slides\Generate-SlideTemplate.ps1 -Config $config
 
 # End-of-day raffle deck — a "Recognition" section (self-playing sponsor
 # loop + eval QR slide) and a "Raffle" section (Raffle Time slide,
@@ -130,10 +130,10 @@ $config = Get-Content .\event.config.json | ConvertFrom-Json
 # to "All slides" and would otherwise autoplay through the whole deck) —
 # Recognition loops until Esc; Esc out and launch Raffle when it's time.
 # (run once sponsors are finalized; re-run any time the sponsor roster changes)
-.\scripts\Generate-RaffleDeck.ps1 -Config $config
+.\scripts\slides\Generate-RaffleDeck.ps1 -Config $config
 
 # Pre-print badge sheets in bulk (Avery 5392, 4"x3", 6-up)
-.\scripts\Generate-NameTag.ps1 -Config $config
+.\scripts\badges\Generate-NameTag.ps1 -Config $config
 
 # Day-of registration / walk-ins: look up by order # or email, prints a
 # single 2.4"x3.9" label (no background art) straight to the Brother
@@ -143,13 +143,13 @@ $config = Get-Content .\event.config.json | ConvertFrom-Json
 # triggers a quick-add prompt to register a true walk-in on the spot.
 # Quick-added walk-ins are LOCAL ONLY (Eventbrite's API can't create real
 # orders/attendees) — see List-UnsyncedWalkins.ps1 below.
-.\scripts\Print-WalkinBadge.ps1 -Config $config
-.\scripts\Print-WalkinBadge.ps1 -Config $config -Email "jane.doe@example.com"
-.\scripts\Print-WalkinBadge.ps1 -Config $config -OrderId "123456789"
+.\scripts\badges\Print-WalkinBadge.ps1 -Config $config
+.\scripts\badges\Print-WalkinBadge.ps1 -Config $config -Email "jane.doe@example.com"
+.\scripts\badges\Print-WalkinBadge.ps1 -Config $config -OrderId "123456789"
 
 # See who was quick-added at the desk but still needs a matching free/comp
 # order created in Eventbrite (dashboard or Box Office app) to stay in sync.
-.\scripts\List-UnsyncedWalkins.ps1 -Config $config
+.\scripts\data\List-UnsyncedWalkins.ps1 -Config $config
 ```
 
 ---
@@ -189,21 +189,28 @@ sqlsat-tools/
 ├── event.config.json             ← gitignored; your live config
 ├── event.db                      ← gitignored; SQLite database
 ├── scripts/
-│   ├── Initialize-Database.ps1
-│   ├── Import-Attendees.ps1
-│   ├── Generate-SpeedPasses.ps1
-│   ├── Send-SpeedPasses.ps1
-│   ├── Generate-StampGame.ps1
-│   ├── Generate-Schedule.ps1
-│   ├── Generate-SlideTemplate.ps1
-│   ├── generate_slide_template.py
-│   ├── Generate-RaffleDeck.ps1
-│   ├── generate_raffle_deck.py
-│   ├── slide_helpers.py          ← shared by both slide-deck builders
-│   ├── Generate-NameTag.ps1      ← bulk Avery badge sheets
-│   ├── Print-WalkinBadge.ps1     ← day-of/walk-in single-label printing (Brother QL-820NWB)
-│   ├── List-UnsyncedWalkins.ps1  ← walk-ins not yet registered in Eventbrite
-│   └── Badge-Helpers.ps1         ← shared by both badge scripts (vCard/QR/PDF/print)
+│   ├── Resolve-EventConfig.ps1   ← shared config-resolution helper
+│   ├── Get-EventLogo.ps1         ← shared event-logo lookup helper
+│   ├── data/
+│   │   ├── Initialize-Database.ps1
+│   │   ├── Import-Attendees.ps1
+│   │   └── List-UnsyncedWalkins.ps1  ← walk-ins not yet registered in Eventbrite
+│   ├── speedpass/
+│   │   ├── Generate-SpeedPasses.ps1
+│   │   └── Send-SpeedPasses.ps1
+│   ├── badges/
+│   │   ├── Badge-Helpers.ps1     ← shared by both badge scripts (vCard/QR/PDF/print)
+│   │   ├── Generate-NameTag.ps1  ← bulk Avery badge sheets
+│   │   └── Print-WalkinBadge.ps1 ← day-of/walk-in single-label printing (Brother QL-820NWB)
+│   ├── slides/
+│   │   ├── slide_helpers.py      ← shared by both slide-deck builders
+│   │   ├── Generate-SlideTemplate.ps1
+│   │   ├── generate_slide_template.py
+│   │   ├── Generate-RaffleDeck.ps1
+│   │   └── generate_raffle_deck.py
+│   └── print/
+│       ├── Generate-Schedule.ps1
+│       └── Generate-StampGame.ps1
 ├── templates/
 │   └── attendee-email.html
 ├── assets/

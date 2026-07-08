@@ -51,12 +51,12 @@ if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
 }
 Import-Module powershell-yaml
 
-. "$PSScriptRoot\Resolve-EventConfig.ps1"
+. "$PSScriptRoot\..\Resolve-EventConfig.ps1"
 $Config = Resolve-EventConfig -Config $Config
-. "$PSScriptRoot\Get-EventLogo.ps1"
+. "$PSScriptRoot\..\Get-EventLogo.ps1"
 
 $raffleCfg      = $Config.raffleDeck
-$outputFile     = Join-Path $PSScriptRoot ".." $raffleCfg.outputFile
+$outputFile     = Join-Path $PSScriptRoot ".." ".." $raffleCfg.outputFile
 $loopSeconds    = if ($raffleCfg.PSObject.Properties['loopAdvanceSeconds']) { $raffleCfg.loopAdvanceSeconds } else { 8 }
 $maxPerGrid     = if ($raffleCfg.PSObject.Properties['maxPerGridSlide']) { $raffleCfg.maxPerGridSlide } else { 8 }
 $footerText     = if ($raffleCfg.PSObject.Properties['footerText']) { $raffleCfg.footerText } else { $Config.event.hashtag }
@@ -157,7 +157,7 @@ foreach ($group in $data.groups) {
 $evalUrl = $Config.schedule.appUrl
 if (-not $evalUrl) { throw "schedule.appUrl is not set in event.config.json — needed for the evaluation QR code." }
 
-$libPath = Join-Path $PSScriptRoot ".." "lib" "QRCoder.dll"
+$libPath = Join-Path $PSScriptRoot ".." ".." "lib" "QRCoder.dll"
 if (-not (Test-Path $libPath)) { throw "QRCoder.dll not found at $libPath." }
 Add-Type -Path $libPath
 
